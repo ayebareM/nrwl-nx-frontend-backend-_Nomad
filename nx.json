@@ -7,5 +7,15 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "nomad-frontend-e2e": {
+      "tags": []
+    },
+    "nomad-frontend": {
+      "tags": []
+    },
+    "nomad-backend": {
+      "tags": []
+    }
+  }
 }

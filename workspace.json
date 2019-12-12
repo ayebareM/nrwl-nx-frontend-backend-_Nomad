@@ -1,8 +1,188 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "nomad-frontend": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/nomad-frontend",
+      "sourceRoot": "apps/nomad-frontend/src",
+      "prefix": "noma",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/nomad-frontend",
+            "index": "apps/nomad-frontend/src/index.html",
+            "main": "apps/nomad-frontend/src/main.ts",
+            "polyfills": "apps/nomad-frontend/src/polyfills.ts",
+            "tsConfig": "apps/nomad-frontend/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/nomad-frontend/src/favicon.ico",
+              "apps/nomad-frontend/src/assets"
+            ],
+            "styles": ["apps/nomad-frontend/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/nomad-frontend/src/environments/environment.ts",
+                  "with": "apps/nomad-frontend/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "nomad-frontend:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "nomad-frontend:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "nomad-frontend:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/nomad-frontend/tsconfig.app.json",
+              "apps/nomad-frontend/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/nomad-frontend/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/nomad-frontend/jest.config.js",
+            "tsConfig": "apps/nomad-frontend/tsconfig.spec.json",
+            "setupFile": "apps/nomad-frontend/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "nomad-frontend-e2e": {
+      "root": "apps/nomad-frontend-e2e",
+      "sourceRoot": "apps/nomad-frontend-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/nomad-frontend-e2e/cypress.json",
+            "tsConfig": "apps/nomad-frontend-e2e/tsconfig.e2e.json",
+            "devServerTarget": "nomad-frontend:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "nomad-frontend:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/nomad-frontend-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/nomad-frontend-e2e/**"]
+          }
+        }
+      }
+    },
+    "nomad-backend": {
+      "root": "apps/nomad-backend",
+      "sourceRoot": "apps/nomad-backend/src",
+      "projectType": "application",
+      "prefix": "nomad-backend",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/nomad-backend",
+            "main": "apps/nomad-backend/src/main.ts",
+            "tsConfig": "apps/nomad-backend/tsconfig.app.json",
+            "assets": ["apps/nomad-backend/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/nomad-backend/src/environments/environment.ts",
+                  "with": "apps/nomad-backend/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "nomad-backend:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "config": "apps/nomad-backend/.eslintrc",
+            "tsConfig": [
+              "apps/nomad-backend/tsconfig.app.json",
+              "apps/nomad-backend/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/nomad-backend/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/nomad-backend/jest.config.js",
+            "tsConfig": "apps/nomad-backend/tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/angular"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -47,6 +227,14 @@
       "application": {
         "linter": "eslint"
       }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
-  }
+  },
+  "defaultProject": "nomad-frontend"
 }
